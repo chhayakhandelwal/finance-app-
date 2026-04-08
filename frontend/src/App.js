@@ -14,6 +14,7 @@ import Lending from "./pages/lending";
 import Login from "./pages/Login";
 import Register from "./pages/register";
 import ForgotPassword from "./pages/forgot";
+import FinanceHomepage from "./home"; // homepage file
 
 import "./App.css";
 
@@ -22,8 +23,8 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
 
-  // ✅ NEW: controls auth screens while logged out
-  const [authView, setAuthView] = useState("login"); // "login" | "register" | "forgot"
+  // "home" | "login" | "register" | "forgot"
+  const [authView, setAuthView] = useState("home");
 
   /* =====================
      Restore session on refresh (initial load)
@@ -40,7 +41,7 @@ export default function App() {
       setIsLoggedIn(false);
       setUsername("");
       setActivePage("Overview");
-      setAuthView("login");
+      setAuthView("home");
     }
   }, []);
 
@@ -60,7 +61,7 @@ export default function App() {
         setIsLoggedIn(false);
         setUsername("");
         setActivePage("Overview");
-        setAuthView("login");
+        setAuthView("home");
       }
     };
 
@@ -82,7 +83,7 @@ export default function App() {
     setUsername(name);
     setIsLoggedIn(true);
     setActivePage("Overview");
-    setAuthView("login");
+    setAuthView("home");
 
     localStorage.setItem("username", name);
     window.dispatchEvent(new Event("auth-token-changed"));
@@ -98,7 +99,7 @@ export default function App() {
     setIsLoggedIn(false);
     setUsername("");
     setActivePage("Overview");
-    setAuthView("login");
+    setAuthView("home");
 
     window.dispatchEvent(new Event("auth-token-changed"));
   };
@@ -161,11 +162,21 @@ export default function App() {
       );
     }
 
-    // default: login
+    if (authView === "login") {
+      return (
+        <Login
+          onLogin={handleLogin}
+          onOpenForgot={() => setAuthView("forgot")}
+          onOpenRegister={() => setAuthView("register")}
+          onBackToHome={() => setAuthView("home")}
+        />
+      );
+    }
+
+    // default: homepage
     return (
-      <Login
-        onLogin={handleLogin}
-        onOpenForgot={() => setAuthView("forgot")}
+      <FinanceHomepage
+        onOpenLogin={() => setAuthView("login")}
         onOpenRegister={() => setAuthView("register")}
       />
     );
@@ -176,11 +187,15 @@ export default function App() {
      ===================== */
   return (
     <div className="app-container">
-      <Sidebar username={username} activePage={activePage} setActivePage={setActivePage} />
+      <Sidebar
+        username={username}
+        activePage={activePage}
+        setActivePage={setActivePage}
+      />
 
       <main className="content-area">
         <header className="top-bar">
-          <h1 className="logo">FinPro</h1>
+          <h1 className="logo">FinGrrow</h1>
         </header>
 
         <section className="content-inner">{renderPage()}</section>

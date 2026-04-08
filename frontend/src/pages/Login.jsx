@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import logo from "./logo.png";
 import "./login.css";
 
 const API_BASE_URL =
   (process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
 
-export default function LoginPage({ onLogin, onOpenForgot, onOpenRegister }) {
+export default function LoginPage({
+  onLogin,
+  onOpenForgot,
+  onOpenRegister,
+  onBackToHome,
+}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +19,20 @@ export default function LoginPage({ onLogin, onOpenForgot, onOpenRegister }) {
   const [captcha, setCaptcha] = useState("");
   const [captchaInput, setCaptchaInput] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [toast, setToast] = useState({
+    show: false,
+    type: "success",
+    message: "",
+  });
+
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, type, message });
+
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, show: false }));
+    }, 2500);
+  };
 
   const generateCaptcha = () => {
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -35,12 +55,12 @@ export default function LoginPage({ onLogin, onOpenForgot, onOpenRegister }) {
     const pwd = password;
 
     if (!uname || !pwd) {
-      alert("Username and Password are required!");
+      showToast("Username and Password are required!", "error");
       return;
     }
 
     if (captchaInput.trim().toUpperCase() !== captcha.toUpperCase()) {
-      alert("Incorrect Captcha");
+      showToast("Invalid captcha", "error");
       generateCaptcha();
       setCaptchaInput("");
       return;
@@ -51,32 +71,53 @@ export default function LoginPage({ onLogin, onOpenForgot, onOpenRegister }) {
     try {
       const res = await axios.post(
         `${API_BASE_URL}/api/login/`,
-        {
-          username: uname,
-          password: pwd,
-        },
-        {
-          headers: { "Content-Type": "application/json" },
-          timeout: 15000,
-        }
+        { username: uname, password: pwd },
+        { headers: { "Content-Type": "application/json" }, timeout: 15000 }
       );
 
-      const token = res.data?.token;
-      if (!token) throw new Error("Token not received");
+      const accessToken =
+        res.data?.token ||
+        res.data?.access ||
+        res.data?.access_token;
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("username", res.data.user?.name || uname);
+      const refreshToken =
+        res.data?.refreshToken ||
+        res.data?.refresh ||
+        res.data?.refresh_token;
 
-      onLogin(res.data.user?.name || uname);
+      if (!accessToken) throw new Error("Token not received");
+
+      localStorage.setItem("token", accessToken);
+      localStorage.setItem("access_token", accessToken);
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("authToken", accessToken);
+      localStorage.setItem("jwt", accessToken);
+
+      if (refreshToken) {
+        localStorage.setItem("refresh_token", refreshToken);
+        localStorage.setItem("refreshToken", refreshToken);
+      }
+
+      const displayName =
+        res.data?.user?.name ||
+        res.data?.user?.username ||
+        uname;
+
+      localStorage.setItem("username", displayName);
+
       window.dispatchEvent(new Event("auth-token-changed"));
+      showToast("Login successful", "success");
 
-      alert("Login successful");
+      setTimeout(() => {
+        onLogin?.(displayName);
+      }, 800);
     } catch (err) {
       console.error("LOGIN ERROR:", err);
-      alert(
+      showToast(
         err?.response?.data?.message ||
-        err?.response?.data?.detail ||
-        "Invalid username or password"
+          err?.response?.data?.detail ||
+          "Invalid username or password",
+        "error"
       );
       generateCaptcha();
       setCaptchaInput("");
@@ -87,68 +128,91 @@ export default function LoginPage({ onLogin, onOpenForgot, onOpenRegister }) {
 
   return (
     <div className="container">
+      {toast.show && (
+        <div className={`login-toast login-toast--${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+
       <header className="header">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/en/e/e9/Banasthali_Vidyapeeth_Logo.png"
-          alt="Banasthali Vidyapith"
-        />
-        <h1>BANASTHALI VIDYAPITH</h1>
+        <div className="header-brand">
+          <div className="logo-box">
+            <img src={logo} alt="FinGrrow" className="header-logo" />
+          </div>
+          <h1>FinGrrow</h1>
+        </div>
       </header>
 
-      <div className="login-box">
-        <h2>Login</h2>
+      <div className="login-wrapper">
+        <div className="login-box">
+          <h2>Login</h2>
 
-        <form onSubmit={handleSubmit}>
-          {/* USERNAME */}
-          <label>Username</label>
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter Username"
-            required
-          />
-
-          {/* PASSWORD */}
-          <label>Password</label>
-          <div className="password-container">
+          <form onSubmit={handleSubmit}>
+            <label>Username</label>
             <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter Username"
               required
             />
-            <span onClick={() => setShowPassword(!showPassword)}>
-              {showPassword ? "🙈" : "👁️"}
-            </span>
-          </div>
 
-          {/* CAPTCHA */}
-          <label>Captcha</label>
-          <div className="captcha-box">
-            <span>{captcha}</span>
-            <button type="button" onClick={generateCaptcha}>🔄</button>
-          </div>
+            <label>Password</label>
+            <div className="password-container">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter Password"
+                required
+              />
+              <span
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setShowPassword(!showPassword);
+                  }
+                }}
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </span>
+            </div>
 
-          <input
-            placeholder="Enter Captcha"
-            value={captchaInput}
-            onChange={(e) => setCaptchaInput(e.target.value)}
-            required
-          />
+            <label>Captcha</label>
+            <div className="captcha-box">
+              <span>{captcha}</span>
+              <button type="button" onClick={generateCaptcha}>
+                🔄
+              </button>
+            </div>
 
-          <button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Logging in..." : "Login"}
-          </button>
+            <input
+              placeholder="Enter Captcha"
+              value={captchaInput}
+              onChange={(e) => setCaptchaInput(e.target.value)}
+              required
+            />
 
-          <div className="login-links">
-            <button type="button" onClick={onOpenForgot}>
-              Forgot Password?
+            <button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Logging in..." : "Login"}
             </button>
-            <button type="button" onClick={onOpenRegister}>
-              Create Account
-            </button>
-          </div>
-        </form>
+
+            <div className="login-links">
+              <button type="button" onClick={onOpenForgot}>
+                Forgot Password?
+              </button>
+              <button type="button" onClick={onOpenRegister}>
+                Create Account
+              </button>
+              <button type="button" onClick={onBackToHome}>
+                ← Back to Home
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

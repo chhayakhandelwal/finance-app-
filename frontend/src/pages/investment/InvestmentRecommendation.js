@@ -1,12 +1,63 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import "./investmentRecommendation.css";
 
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-ChartJS.register(ArcElement, Tooltip, Legend);
+//recommendation changes
+function ScoreSummary({ item }) {
+  const breakdown = item?.rationale?.score_breakdown;
+  const overview = item?.rationale?.calculation_overview;
+  const factors = item?.rationale?.user_friendly_factors || [];
 
-const TOKEN_KEYS = ["token", "accessToken", "authToken", "jwt"];
+  if (!breakdown && !overview && !factors.length) return null;
+
+  return (
+    <div className="invReco-scoreSummary">
+      <div className="invReco-scoreSummaryTitle">
+        How this score was calculated
+      </div>
+
+      {overview && (
+        <p className="invReco-scoreSummaryText">{overview}</p>
+      )}
+
+      {breakdown && (
+        <div className="invReco-scoreMiniGrid">
+          <div className="invReco-scoreMiniCard">
+            <span>Base Score</span>
+            <strong>{breakdown.base_score}</strong>
+          </div>
+
+          <div className="invReco-scoreMiniCard">
+            <span>Advanced Score</span>
+            <strong>{breakdown.advanced_score}</strong>
+          </div>
+
+          <div className="invReco-scoreMiniCard">
+            <span>Final Score</span>
+            <strong>{breakdown.final_score}</strong>
+          </div>
+        </div>
+      )}
+
+      {factors.length > 0 && (
+        <ul className="invReco-factorList">
+          {factors.map((f, i) => (
+            <li key={i}>{f}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+
+
+
+const API_BASE_URL =
+  (process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
+
+const TOKEN_KEYS = ["access_token", "token", "accessToken", "authToken", "jwt"];
+
 const readToken = () => {
   for (const k of TOKEN_KEYS) {
     const v = localStorage.getItem(k);
@@ -19,30 +70,6 @@ const readToken = () => {
   return null;
 };
 
-// ---- helpers ----
-function parseReturnRange(str) {
-  // Accepts: "10% – 12%" or "10% - 12%" or "10%-12%" or "12%"
-  if (!str || typeof str !== "string") return null;
-  const s = str.replace(/\s/g, "");
-  const matches = s.match(/(\d+(\.\d+)?)/g);
-  if (!matches || matches.length === 0) return null;
-
-  const nums = matches.map(Number).filter((n) => Number.isFinite(n));
-  if (!nums.length) return null;
-
-  if (nums.length === 1) return { low: nums[0], high: nums[0] };
-  return { low: Math.min(nums[0], nums[1]), high: Math.max(nums[0], nums[1]) };
-}
-
-function fv(principal, ratePct, years) {
-  // FV = P * (1 + r)^n
-  const P = Number(principal) || 0;
-  const r = (Number(ratePct) || 0) / 100;
-  const n = Number(years) || 0;
-  if (P <= 0 || n <= 0) return 0;
-  return P * Math.pow(1 + r, n);
-}
-
 function inr(x) {
   return Number(x || 0).toLocaleString("en-IN", {
     style: "currency",
@@ -51,283 +78,375 @@ function inr(x) {
   });
 }
 
+function num(x, fallback = 0) {
+  const n = Number(x);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function formatDate(value) {
+  if (!value) return "-";
+  try {
+    return new Date(value).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  } catch {
+    return value;
+  }
+}
+
+function SuitabilityBadge({ value }) {
+  const v = String(value || "").toLowerCase();
+
+  let cls = "invReco-badge invReco-badge-neutral";
+  if (v === "excellent") cls = "invReco-badge invReco-badge-good";
+  else if (v === "good") cls = "invReco-badge invReco-badge-info";
+  else if (v === "watch") cls = "invReco-badge invReco-badge-warn";
+
+  return <span className={cls}>{value || "-"}</span>;
+}
+
+function ProgressBar({ value }) {
+  const pct = Math.max(0, Math.min(num(value, 0), 100));
+  return (
+    <div className="invReco-progressTrack">
+      <div className="invReco-progressFill" style={{ width: `${pct}%` }} />
+    </div>
+  );
+}
+
+function SummaryStrip({ rows }) {
+  if (!rows.length) return null;
+
+  const first = rows[0];
+
+  return (
+    <div className="invReco-summaryGrid">
+      <div className="invReco-summaryCard">
+        <div className="invReco-summaryLabel">Monthly Income</div>
+        <div className="invReco-summaryValue">{inr(first.monthly_income_snapshot)}</div>
+      </div>
+
+      <div className="invReco-summaryCard">
+        <div className="invReco-summaryLabel">Last Month Expenses</div>
+        <div className="invReco-summaryValue">{inr(first.last_month_expense_snapshot)}</div>
+      </div>
+
+      <div className="invReco-summaryCard">
+        <div className="invReco-summaryLabel">Free Cashflow</div>
+        <div className="invReco-summaryValue">{inr(first.free_cashflow_snapshot)}</div>
+      </div>
+
+      <div className="invReco-summaryCard">
+        <div className="invReco-summaryLabel">Safe Investment Pool</div>
+        <div className="invReco-summaryValue">{inr(first.recommendation_pool_snapshot)}</div>
+      </div>
+    </div>
+  );
+}
+
+function FundReasonList({ item }) {
+  const rationale = item?.rationale || {};
+  const points = [];
+
+  if (rationale.category_fit) points.push(rationale.category_fit);
+  if (rationale.horizon_fit) points.push(rationale.horizon_fit);
+  if (rationale.progress_fit) points.push(rationale.progress_fit);
+  if (rationale.risk_style) points.push(rationale.risk_style);
+  if (rationale.cost_fit) points.push(rationale.cost_fit);
+
+  if (!points.length && item?.summary) {
+    points.push(item.summary);
+  }
+
+  return (
+    <div className="invReco-whyBox">
+      <div className="invReco-whyTitle">Why this fund</div>
+      <ul className="invReco-whyList">
+        {points.map((p, idx) => (
+          <li key={`${item.id}-why-${idx}`}>{p}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function GoalCard({ goalName, items }) {
+  const first = items[0];
+
+  const progressPct =
+    first.goal_progress_pct != null
+      ? num(first.goal_progress_pct)
+      : num(first.goal_target_amount) > 0
+      ? (num(first.goal_saved_amount) / num(first.goal_target_amount)) * 100
+      : 0;
+
+  const totalSuggestedForGoal = items.reduce(
+    (sum, item) => sum + num(item.suggested_monthly_amount),
+    0
+  );
+
+  const requiredMonthly = num(first.required_monthly_amount);
+  const isUnderfunded = totalSuggestedForGoal < requiredMonthly;
+
+  return (
+    <div className="invReco-goalCard">
+      <div className="invReco-goalHeader">
+        <div>
+          <h4 className="invReco-goalTitle">{goalName || "Unnamed Goal"}</h4>
+          <div className="invReco-goalMeta">
+            <span>Target: {inr(first.goal_target_amount)}</span>
+            <span>Saved: {inr(first.goal_saved_amount)}</span>
+            <span>Remaining: {inr(first.goal_remaining_amount)}</span>
+            <span>Target Date: {formatDate(first.goal_target_date)}</span>
+            <span>
+              Horizon:{" "}
+              {first.suggested_horizon_months
+                ? `${first.suggested_horizon_months} months`
+                : "-"}
+            </span>
+            <span>Priority: {num(first.goal_priority_score).toFixed(3)}</span>
+          </div>
+        </div>
+
+        <div className="invReco-progressBox">
+          <div className="invReco-progressTop">
+            <span>Progress</span>
+            <strong>{progressPct.toFixed(2)}%</strong>
+          </div>
+          <ProgressBar value={progressPct} />
+        </div>
+      </div>
+
+      <div className="invReco-goalStats">
+        <div className="invReco-goalStat">
+          <div className="invReco-goalStatLabel">Required Monthly</div>
+          <div className="invReco-goalStatValue">{inr(requiredMonthly)}</div>
+        </div>
+
+        <div className="invReco-goalStat">
+          <div className="invReco-goalStatLabel">Recommended for this Goal</div>
+          <div className="invReco-goalStatValue">{inr(totalSuggestedForGoal)}</div>
+        </div>
+      </div>
+
+      {isUnderfunded && (
+        <div className="invReco-warning">
+          This goal currently needs more than the realistically affordable monthly amount.
+        </div>
+      )}
+
+      <div className="invReco-tableWrap">
+        <table className="invReco-table">
+          <thead>
+            <tr>
+              <th>Fund</th>
+              <th>AMC</th>
+              <th>Category</th>
+              <th>Type</th>
+              <th>Suggested Monthly</th>
+              <th>Score</th>
+              <th>Suitability</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((r) => (
+              <tr key={r.id}>
+                <td>
+                    <div className="invReco-fundName">{r.scheme_name || "-"}</div>
+
+                   <div className="invReco-summary">
+    
+                    {/* ✅ NEW: Score Explanation */}
+                     <ScoreSummary item={r} />
+
+                    {/* OLD summary (optional) */}
+                     {r.summary && <div>{r.summary}</div>}
+
+                     {/* ✅ Reasons (backend se aaye hue) */}
+                    {r?.rationale &&
+                      Object.entries(r.rationale)
+                        .filter(([key, val]) =>
+                          typeof val === "string" &&
+                         key !== "calculation_overview"
+                       )
+                       .map(([key, val], idx) => (
+                         <div key={idx}>• {val}</div>
+                      ))}
+                </div>
+                </td>
+                <td>{r.amc || "-"}</td>
+                <td>{r.category_key || "-"}</td>
+                <td>{r.fund_type || "-"}</td>
+                <td>{inr(r.suggested_monthly_amount)}</td>
+                <td>{r.score ?? "-"}</td>
+                <td>
+                  <SuitabilityBadge value={r.suitability} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="invReco-whySection">
+        <div className="invReco-whySectionTitle">Why these funds?</div>
+        <div className="invReco-whyCards">
+          {items.map((item) => (
+            <FundReasonList key={`reason-${item.id}`} item={item} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function InvestmentRecommendation() {
-  const [form, setForm] = useState({
-    risk: "MEDIUM",
-    horizon: 5,
-    amount: "",
-    type: "BOTH",
-    goal: "WEALTH",
-  });
-
-  const [result, setResult] = useState(null);
+  const [rows, setRows] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [building, setBuilding] = useState(false);
   const [msg, setMsg] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  const API_BASE_URL =
-    process.env.REACT_APP_API_BASE_URL || "http://localhost:5001";
-
-  const ensureLoggedIn = () => {
+  const getHeaders = () => {
     const token = readToken();
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  };
+
+  const loadLatestRecommendations = async () => {
+    const token = readToken();
+
     if (!token) {
       setMsg("You are not logged in. Please login first.");
-      return null;
-    }
-    return token;
-  };
-
-  const validate = () => {
-    const amountNum = Number(form.amount);
-    const horizonNum = Number(form.horizon);
-
-    if (!Number.isFinite(horizonNum) || horizonNum <= 0) return "Horizon must be > 0 (years).";
-    if (!Number.isFinite(amountNum) || amountNum <= 0) return "Amount must be > 0.";
-    if (!["LOW", "MEDIUM", "HIGH"].includes(form.risk)) return "Invalid risk value.";
-    if (!["STOCK", "MF", "BOTH"].includes(form.type)) return "Invalid type value.";
-    return null;
-  };
-
-  const submit = async () => {
-    const token = ensureLoggedIn();
-    if (!token) return;
-
-    const err = validate();
-    if (err) {
-      setMsg(err);
-      setResult(null);
+      setRows([]);
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
-    setMsg("");
     try {
-      const payload = {
-        risk: form.risk,
-        horizon: Number(form.horizon),
-        amount: Number(form.amount),
-        type: form.type,
-        goal: form.goal,
-      };
+      setLoading(true);
+      setMsg("");
 
-      const res = await axios.post(
-        `${API_BASE_URL}/api/investment/recommend`,
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await axios.get(
+        `${API_BASE_URL}/api/investment/recommendations/latest/`,
+        {
+          headers: getHeaders(),
+          timeout: 20000,
+        }
       );
 
-      setResult(res.data);
+      setRows(Array.isArray(res.data) ? res.data : []);
     } catch (e) {
-      const backendMsg = e?.response?.data?.message;
-      setMsg(backendMsg || "Failed to get recommendation");
-      setResult(null);
-      console.error("RECOMMEND ERROR:", e?.response?.data || e?.message);
+      console.error("LOAD RECOMMENDATIONS ERROR:", e?.response?.data || e?.message);
+      setMsg(
+        e?.response?.data?.detail ||
+          e?.response?.data?.message ||
+          "Failed to load recommendations."
+      );
+      setRows([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // ---- Allocation Pie ----
-  const allocation = result?.allocation || null;
+  const buildRecommendations = async () => {
+    const token = readToken();
 
-  const pieData = useMemo(() => {
-    if (!allocation) return null;
-    return {
-      labels: ["Equity", "Debt", "Gold"],
-      datasets: [
+    if (!token) {
+      setMsg("You are not logged in. Please login first.");
+      return;
+    }
+
+    try {
+      setBuilding(true);
+      setMsg("");
+
+      await axios.post(
+        `${API_BASE_URL}/api/investment/recommendations/build/`,
+        {},
         {
-          label: "Allocation %",
-          data: [allocation.equity || 0, allocation.debt || 0, allocation.gold || 0],
-        },
-      ],
-    };
-  }, [allocation]);
+          headers: getHeaders(),
+          timeout: 30000,
+        }
+      );
 
-  const pieOptions = useMemo(
-    () => ({
-      responsive: true,
-      plugins: {
-        legend: { position: "bottom" },
-        tooltip: {
-          callbacks: {
-            label: (ctx) => `${ctx.label}: ${ctx.parsed}%`,
-          },
-        },
-      },
-    }),
-    []
-  );
+      await loadLatestRecommendations();
+      setMsg("Recommendations refreshed successfully.");
+    } catch (e) {
+      console.error("BUILD RECOMMENDATIONS ERROR:", e?.response?.data || e?.message);
+      setMsg(
+        e?.response?.data?.detail ||
+          e?.response?.data?.message ||
+          "Failed to build recommendations."
+      );
+    } finally {
+      setBuilding(false);
+    }
+  };
 
-  // ---- Corpus calculator ----
-  const range = useMemo(() => parseReturnRange(result?.expectedReturn), [result?.expectedReturn]);
+  useEffect(() => {
+    loadLatestRecommendations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const corpus = useMemo(() => {
-    if (!result || !range) return null;
+  const groupedGoals = useMemo(() => {
+    const grouped = {};
 
-    const P = Number(form.amount);
-    const years = Number(form.horizon);
+    for (const row of rows) {
+      const key = row.goal_name || "Unnamed Goal";
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(row);
+    }
 
-    const lowFV = fv(P, range.low, years);
-    const highFV = fv(P, range.high, years);
-    const midRate = (range.low + range.high) / 2;
-    const midFV = fv(P, midRate, years);
-
-    return {
-      lowRate: range.low,
-      highRate: range.high,
-      midRate,
-      lowFV,
-      midFV,
-      highFV,
-    };
-  }, [result, range, form.amount, form.horizon]);
-
-  const badges = useMemo(() => {
-    if (!result) return [];
-    return [
-      `Risk: ${form.risk}`,
-      `Horizon: ${form.horizon}y`,
-      `Type: ${form.type}`,
-      `Expected: ${result.expectedReturn || "-"}`,
-    ];
-  }, [result, form]);
+    return Object.entries(grouped).map(([goalName, items]) => ({
+      goalName,
+      items,
+    }));
+  }, [rows]);
 
   return (
-    <div className="invR-wrap">
-      <h3>Investment Recommendation</h3>
+    <div className="invReco-wrap">
+      <div className="invReco-top">
+        <div>
+          <h3 className="invReco-title">Investment Recommendations</h3>
+          <p className="invReco-subtitle">
+            Goal-based recommendations using your monthly income, previous month
+            expenses, goal progress, and available active, passive, and debt funds.
+          </p>
+        </div>
 
-      <div className="invR-form">
-        <select
-          value={form.risk}
-          onChange={(e) => setForm((p) => ({ ...p, risk: e.target.value }))}
+        <button
+          type="button"
+          className="invReco-btn"
+          onClick={buildRecommendations}
+          disabled={building}
         >
-          <option value="LOW">Low Risk</option>
-          <option value="MEDIUM">Medium Risk</option>
-          <option value="HIGH">High Risk</option>
-        </select>
-
-        <input
-          type="number"
-          min="1"
-          placeholder="Years"
-          value={form.horizon}
-          onChange={(e) => setForm((p) => ({ ...p, horizon: e.target.value }))}
-        />
-
-        <input
-          type="number"
-          min="1"
-          placeholder="Amount (₹)"
-          value={form.amount}
-          onChange={(e) => setForm((p) => ({ ...p, amount: e.target.value }))}
-        />
-
-        <select
-          value={form.type}
-          onChange={(e) => setForm((p) => ({ ...p, type: e.target.value }))}
-        >
-          <option value="STOCK">Stocks</option>
-          <option value="MF">Mutual Funds</option>
-          <option value="BOTH">Both</option>
-        </select>
-
-        <button type="button" onClick={submit} disabled={loading}>
-          {loading ? "Calculating..." : "Get Recommendation"}
+          {building ? "Refreshing..." : "Refresh Recommendations"}
         </button>
       </div>
 
-      {msg && <div className="invR-msg">{msg}</div>}
+      {msg && <div className="invReco-msg">{msg}</div>}
 
-      {result && (
-        <div className="invR-result">
-          <div className="invR-badges">
-            {badges.map((b) => (
-              <span key={b} className="invR-pill muted">
-                {b}
-              </span>
+      {loading ? (
+        <div className="invReco-empty">Loading recommendations...</div>
+      ) : rows.length === 0 ? (
+        <div className="invReco-empty">
+          No recommendations available yet. Click “Refresh Recommendations”.
+        </div>
+      ) : (
+        <>
+          <SummaryStrip rows={rows} />
+
+          <div className="invReco-goalsWrap">
+            {groupedGoals.map((group) => (
+              <GoalCard
+                key={group.goalName}
+                goalName={group.goalName}
+                items={group.items}
+              />
             ))}
           </div>
-
-          {/* ===== Allocation + Pie ===== */}
-          {allocation && (
-            <>
-              <h4>Suggested Allocation</h4>
-              <div className="invR-alloc">
-                <div className="invR-allocCard">
-                  <div className="k">Equity</div>
-                  <div className="v">{allocation.equity}%</div>
-                </div>
-                <div className="invR-allocCard">
-                  <div className="k">Debt</div>
-                  <div className="v">{allocation.debt}%</div>
-                </div>
-                <div className="invR-allocCard">
-                  <div className="k">Gold</div>
-                  <div className="v">{allocation.gold}%</div>
-                </div>
-              </div>
-
-              <div style={{ marginTop: 12, border: "1px solid #e5e7eb", borderRadius: 12, padding: 12 }}>
-                <h4 style={{ marginTop: 0 }}>Allocation Pie</h4>
-                <div style={{ height: 260 }}>
-                  <Pie data={pieData} options={pieOptions} />
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* ===== Corpus Calculator ===== */}
-          <h4>Approx Corpus (Lumpsum)</h4>
-          {!corpus ? (
-            <p className="muted">Corpus estimate will appear after recommendation.</p>
-          ) : (
-            <>
-              <div className="invR-alloc" style={{ marginTop: 8 }}>
-                <div className="invR-allocCard">
-                  <div className="k">Low ({corpus.lowRate}%)</div>
-                  <div className="v">{inr(corpus.lowFV)}</div>
-                </div>
-                <div className="invR-allocCard">
-                  <div className="k">Mid ({corpus.midRate.toFixed(1)}%)</div>
-                  <div className="v">{inr(corpus.midFV)}</div>
-                </div>
-                <div className="invR-allocCard">
-                  <div className="k">High ({corpus.highRate}%)</div>
-                  <div className="v">{inr(corpus.highFV)}</div>
-                </div>
-              </div>
-
-              <p style={{ marginTop: 8, color: "#6b7280", fontSize: 12 }}>
-                Formula: FV = P × (1 + r)^n (lumpsum estimate)
-              </p>
-            </>
-          )}
-
-          {/* ===== Suggestions ===== */}
-          <h4>Suggested Stocks (India)</h4>
-          {result.stocks?.length ? (
-            <ul className="invR-list">
-              {result.stocks.map((s) => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="muted">No stock suggestions for selected type.</p>
-          )}
-
-          <h4>Suggested Mutual Funds (India)</h4>
-          {result.mutualFunds?.length ? (
-            <ul className="invR-list">
-              {result.mutualFunds.map((m) => (
-                <li key={m}>{m}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="muted">No mutual fund suggestions for selected type.</p>
-          )}
-
-          <h4>Note</h4>
-          <p>{result.note || "Returns are indicative and not guaranteed."}</p>
-        </div>
+        </>
       )}
     </div>
   );

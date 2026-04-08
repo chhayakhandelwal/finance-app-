@@ -1,11 +1,12 @@
 import React from "react";
+import logo from "./logo.png";
 import {
   LayoutDashboard,
   Wallet,
   PiggyBank,
   TrendingUp,
-  Shield,        // Emergency
-  ShieldCheck,   // Insurance
+  Shield,
+  ShieldCheck,
   CreditCard,
   HandCoins,
   User,
@@ -14,9 +15,6 @@ import {
 import "./sidebar.css";
 
 export default function Sidebar({ username, activePage, setActivePage }) {
-  /* =====================
-     Sidebar menu config
-     ===================== */
   const menuItems = [
     { label: "Overview", icon: <LayoutDashboard size={18} /> },
     { label: "Income", icon: <Wallet size={18} /> },
@@ -29,9 +27,6 @@ export default function Sidebar({ username, activePage, setActivePage }) {
     { label: "Profile", icon: <User size={18} /> },
   ];
 
-  /* =====================
-     User initials (safe)
-     ===================== */
   const safeName = username?.trim() || "User";
   const initials = safeName
     .split(" ")
@@ -44,14 +39,13 @@ export default function Sidebar({ username, activePage, setActivePage }) {
 
   return (
     <aside className="sidebar" aria-label="Primary navigation">
-      {/* Decorative background */}
       <div className="sidebar-bg" aria-hidden="true" />
 
       {/* Brand */}
       <div className="sidebar-brand">
-        <div className="brand-mark" aria-hidden="true" />
+        <img src={logo} alt="FinGrrow" className="brand-logo" />
         <div className="brand-text">
-          <div className="brand-title">FinPro</div>
+          <div className="brand-title">FinGrrow</div>
           <div className="brand-subtitle">Personal Finance</div>
         </div>
       </div>

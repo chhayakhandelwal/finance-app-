@@ -14,44 +14,67 @@
 .register-page {
   min-height: 100vh;
   background: var(--bg);
-  padding-top: 120px; /* space for fixed header */
+  padding-top: 110px; /* header space */
   padding-bottom: 40px;
-
-  /* ✅ Fix scrolling: let the page/body scroll naturally */
-  display: block;
-  overflow: visible;
 }
 
-/* Fixed Header like Login */
-.register-header {
-  width: 100%;
+/* ✅ SAME HEADER AS LOGIN */
+.header {
   position: fixed;
   top: 0;
   left: 0;
-  height: 92px;
-  background: var(--primary);
+  width: 100%;
+
+  background: linear-gradient(180deg, #153e75 0%, #0f2f59 100%);
+  color: #fff;
+  padding: 14px 20px;
+  min-height: 84px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  z-index: 50;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+
+  box-shadow: 0 10px 26px rgba(2, 8, 23, 0.12);
+  z-index: 1000;
 }
 
-.register-header img {
-  width: 56px;
-  height: 56px;
-  border-radius: 999px;
-  background: #fff;
-  padding: 6px;
+/* Brand */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.register-header h1 {
+/* Logo square */
+.logo-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.logo-box img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+/* Heading */
+.header h1 {
   margin: 0;
-  color: #fff;
   font-size: 26px;
-  letter-spacing: 0.8px;
   font-weight: 800;
+  letter-spacing: 0.4px;
   text-transform: uppercase;
 }
 
@@ -64,12 +87,10 @@
   box-shadow: var(--shadow);
   border: 1px solid rgba(229, 231, 235, 0.9);
   overflow: hidden;
-
-  /* ✅ Center the card */
   margin: 0 auto;
 }
 
-/* Card top section */
+/* Card header */
 .register-card-head {
   padding: 22px 26px;
   border-bottom: 1px solid var(--border);
@@ -84,17 +105,17 @@
 }
 
 .register-subtitle {
-  margin: 6px 0 0;
+  margin-top: 6px;
   font-size: 13px;
   color: var(--muted);
 }
 
-/* Form body */
+/* Body */
 .register-body {
   padding: 22px 26px 26px;
 }
 
-/* Grid layout */
+/* Grid */
 .register-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -117,28 +138,23 @@
 .field label {
   font-size: 13px;
   font-weight: 700;
-  color: #111827;
 }
 
-.input,
-.select {
-  width: 100%;
+/* Inputs */
+.input {
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 12px 12px;
+  padding: 12px;
   font-size: 14px;
   outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-  background: #fff;
 }
 
-.input:focus,
-.select:focus {
+.input:focus {
   border-color: rgba(13, 59, 120, 0.55);
   box-shadow: 0 0 0 4px rgba(13, 59, 120, 0.12);
 }
 
-/* Full width rows */
+/* Full row */
 .full {
   grid-column: 1 / -1;
 }
@@ -146,25 +162,19 @@
 /* Gender */
 .gender-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 14px;
-  padding: 10px 12px;
+  padding: 10px;
   border: 1px solid var(--border);
   border-radius: 12px;
 }
 
-.gender-row label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #111827;
-  font-size: 14px;
-}
-
-/* Password with eye */
+/* Password */
 .password-wrap {
   position: relative;
+}
+
+.password-wrap .input {
+  padding-right: 52px;
 }
 
 .eye-btn {
@@ -172,31 +182,23 @@
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
+  width: 38px;
   height: 34px;
-  width: 40px;
   display: grid;
   place-items: center;
   border-radius: 10px;
-  cursor: pointer;
   border: 1px solid var(--border);
   background: #f8fafc;
-  color: #334155;
-  transition: background 0.2s ease, border 0.2s ease;
-}
-
-.eye-btn:hover {
-  background: #eef2ff;
-  border-color: rgba(13, 59, 120, 0.35);
+  cursor: pointer;
 }
 
 /* Errors */
 .helper-error {
   font-size: 12px;
   color: #dc2626;
-  margin-top: 2px;
 }
 
-/* Actions */
+/* Buttons */
 .actions {
   display: flex;
   gap: 12px;
@@ -211,51 +213,45 @@
 
 .btn-primary {
   flex: 1;
-  border: none;
   border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 14px;
+  padding: 12px;
   font-weight: 800;
   background: var(--primary);
   color: #fff;
+  border: none;
   cursor: pointer;
-  transition: transform 0.05s ease, background 0.2s ease;
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
 }
 
-.btn-primary:active {
-  transform: translateY(1px);
-}
-
 .btn-secondary {
   flex: 1;
   border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 14px;
+  padding: 12px;
   font-weight: 800;
   background: #fff;
   color: var(--primary);
   border: 1px solid rgba(13, 59, 120, 0.35);
-  cursor: pointer;
-  transition: background 0.2s ease, border 0.2s ease;
 }
 
-.btn-secondary:hover {
-  background: #f4f7ff;
-  border-color: rgba(13, 59, 120, 0.55);
-}
-
-/* Success */
-.success {
-  margin-top: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: #ecfdf5;
-  border: 1px solid #bbf7d0;
-  color: #065f46;
+/* Toast */
+.login-toast {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  color: #fff;
   font-weight: 700;
-  font-size: 13px;
+  z-index: 9999;
+}
+
+.login-toast--success {
+  background: #16a34a;
+}
+
+.login-toast--error {
+  background: #dc2626;
 }

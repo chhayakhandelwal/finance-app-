@@ -1,0 +1,87 @@
+{
+  "equity": {
+    "active": {
+      "largecap": [
+        { "amc": "HDFC", "label": "HDFC Large Cap Fund - Direct Growth", "scheme_code": "119018" },
+        { "amc": "ICICI", "label": "ICICI Prudential Large Cap Fund (erstwhile Bluechip Fund) - Direct Plan - Growth", "scheme_code": "120586" },
+        { "amc": "SBI", "label": "SBI Large Cap FUND-DIRECT PLAN -GROWTH", "scheme_code": "119598" },
+        { "amc": "AXIS", "label": "Axis Large Cap Fund - Direct Growth", "scheme_code": "120465" }
+      ],
+      "midcap": [
+        { "amc": "HDFC", "label": "HDFC Mid Cap Fund- Direct Growth", "scheme_code": "118989" },
+        { "amc": "ICICI", "label": "ICICI Prudential MidCap Fund - Direct Plan -  Growth", "scheme_code": "120381" },
+        { "amc": "SBI", "label": "SBI MIDCAP FUND - DIRECT PLAN - GROWTH", "scheme_code": "119716" },
+        { "amc": "AXIS", "label": "Axis MidCap Fund- Direct Growth", "scheme_code": "120505" }
+      ],
+      "smallcap": [
+        { "amc": "HDFC", "label": "HDFC Small Cap Fund - Growth Option - Direct Plan", "scheme_code": "130503" },
+        { "amc": "ICICI", "label": "ICICI Prudential Smallcap Fund - Direct Plan - Growth", "scheme_code": "120591" },
+        { "amc": "SBI", "label": "SBI Small Cap Fund - Direct Growth", "scheme_code": "125497" },
+        { "amc": "AXIS", "label": "Axis Small Cap Fund - Direct Plan - Growth", "scheme_code": "125354" }
+      ],
+
+      "multicap": [
+        { "amc": "HDFC", "label": "HDFC Multi Cap Fund - Growth Option - Direct Plan", "scheme_code": "149368" },
+        { "amc": "ICICI", "label": "ICICI Prudential Multicap Fund - Direct Plan -  Growth", "scheme_code": "120599" },
+        { "amc": "SBI", "label": "SBI Multicap Fund- Direct Plan- Growth option", "scheme_code": "149882" },
+        { "amc": "AXIS", "label": "Axis MultiCap Fund - Direct Growth", "scheme_code": "149383" }
+      ],
+
+      "flexicap": [
+        { "amc": "HDFC", "label": "HDFC Flexi Cap Fund - Growth Option - Direct Plan", "scheme_code": "118955" },
+        { "amc": "ICICI", "label": "ICICI Prudential Flexicap Fund - Direct Plan - Growth", "scheme_code": "148990" },
+        { "amc": "SBI", "label": "SBI Flexicap Fund - DIRECT PLAN - Growth Option", "scheme_code": "119718" },
+        { "amc": "AXIS", "label": "Axis Flexi Cap Fund - Direct Plan - Growth", "scheme_code": "141925" }
+      ],
+
+      "balanced_advantage": [
+        { "amc": "HDFC", "label": "HDFC Balanced Advantage Fund - Growth Plan - Direct Plan", "scheme_code": "118968" },
+        { "amc": "ICICI", "label": "ICICI Prudential Balanced Advantage Fund - Direct Plan -  Growth", "scheme_code": "120377" },
+        { "amc": "SBI", "label": "SBI Balanced Advantage Fund - Direct Plan - Growth", "scheme_code": "149134" },
+        { "amc": "AXIS", "label": "Axis Balanced Advantage Fund - Direct Plan - Growth", "scheme_code": "141642" }
+      ],
+
+      "multi_asset": [
+        { "amc": "HDFC", "label": "HDFC Multi-Asset Fund - Growth Option - Direct Plan", "scheme_code": "119131" },
+        { "amc": "ICICI", "label": "ICICI Prudential Multi-Asset Fund - Direct Plan - Growth", "scheme_code": "120334" },
+        { "amc": "SBI", "label": "SBI MULTI ASSET ALLOCATION FUND - DIRECT PLAN - GROWTH", "scheme_code": "119843" },
+        { "amc": "AXIS", "label": "Axis Multi Asset Allocation Fund - Direct Plan - Growth Option", "scheme_code": "120524" }
+      ],
+
+      "hybrid_conservative": [
+        { "amc": "SBI", "label": "SBI Conservative Hybrid Fund - Direct Plan - Growth", "scheme_code": "119839" },
+        { "amc": "AXIS", "label": "Axis Conservative Hybrid Fund - Direct Plan - Growth Option", "scheme_code": "120480" }
+      ],
+
+      "hybrid_aggressive": [
+        { "amc": "AXIS", "label": "Axis Aggressive Hybrid Fund - Direct Plan - Growth Option", "scheme_code": "144394" }
+      ]
+    },
+
+    "passive": {
+    "nifty50": [
+        { "amc": "HDFC", "label": "HDFC NIFTY50 Equal weight Index Fund -Direct Growth", "scheme_code": "149107" },
+        { "amc": "HDFC", "label": "HDFC Nifty 50 Index Fund - Direct Plan", "scheme_code": "119063" },
+        { "amc": "ICICI", "label": "ICICI Prudential Nifty 50 Index Fund - Direct Plan Cumulative Option", "scheme_code": "120620" },
+        { "amc": "ICICI", "label": "ICICI Prudential Nifty50 Equal Weight Index Fund- Direct Plan - Growth", "scheme_code": "150639" },
+        { "amc": "SBI", "label": "SBI Nifty50 Equal Weight Index Fund - Direct Plan - Growth", "scheme_code": "152370" },
+        { "amc": "AXIS", "label": "Axis Nifty 50 Index Fund - Direct Growth", "scheme_code": "149373" }
+    ],
+    "bse": [
+         { "amc": "HDFC", "label": "HDFC BSE 500 Index Fund - Growth Option - Direct Plan", "scheme_code": "151728" },
+         { "amc": "AXIS", "label": "Axis BSE India Sectors Leaders Index Fund- Direct Plan- Growth Option", "scheme_code": "154171" }
+    ], 
+    "midcap150": [
+        { "amc": "HDFC", "label": "HDFC NIFTY Midcap 150 Index Fund - Growth Option - Direct Plan", "scheme_code": "151724" },
+        { "amc": "ICICI", "label": "ICICI Prudential Nifty Midcap 150 Index Fund - Direct Plan - Growth", "scheme_code": "149389" },
+        { "amc": "SBI", "label": "SBI Nifty Midcap 150 Index Fund - Direct Plan - Growth", "scheme_code": "150673" }
+
+    ],
+    "smallcap250": [
+        { "amc": "HDFC", "label": "HDFC NIFTY Smallcap 250 Index Fund - Growth Option - Direct Plan", "scheme_code": "151727" },
+        { "amc": "ICICI", "label": "ICICI Prudential Nifty Smallcap 250 Index Fund - Direct Plan - Growth", "scheme_code": "149283" },
+        { "amc": "SBI", "label": "SBI Nifty Smallcap 250 Index Fund - Direct Plan - Growth", "scheme_code": "150677" }
+    ]
+    }
+  }
+}

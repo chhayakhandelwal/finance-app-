@@ -1,90 +1,693 @@
 .ov {
-  padding: 24px;
+  height: calc(100vh - 110px);
+  padding: 20px;
+  background: #f4f7fb;
+  color: #0f172a;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
 }
 
-.ov__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+.ov__hero {
   margin-bottom: 16px;
+  flex-shrink: 0;
 }
 
 .ov__title {
   margin: 0;
-  font-size: 26px;
+  font-size: 28px;
   font-weight: 800;
-  color: #0d47a1;
+  color: #1546a0;
 }
 
 .ov__subtitle {
   margin: 6px 0 0;
-  color: #6b7280;
+  font-size: 14px;
+  color: #667085;
 }
 
 .ov__alert {
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  color: #9a3412;
-  padding: 10px 12px;
-  border-radius: 10px;
   margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff4f4;
+  border: 1px solid #ffd0d5;
+  color: #b42318;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
 }
 
 .ov__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.ov__grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .ov__card {
-  background: #fff;
-  border: 1px solid #e6edf7;
-  border-radius: 14px;
-  padding: 16px;
   display: flex;
-  gap: 12px;
   align-items: center;
-  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06);
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid #e5ecf6;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+  min-height: 84px;
 }
 
-.ov__card--accent {
-  border-color: #c7dbff;
-  background: linear-gradient(180deg, #ffffff, #f2f7ff);
+.ov__card--health {
+  background: linear-gradient(135deg, #f7fff9 0%, #ffffff 100%);
+  border: 1px solid #d9efe0;
+}
+
+.ov__card--healthRich {
+  display: block;
+  padding: 12px 14px;
 }
 
 .ov__icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eef5ff;
-  color: #0d47a1;
-  flex: 0 0 auto;
+  font-size: 19px;
+  flex-shrink: 0;
+}
+
+.ov__icon--green {
+  background: #eafaf1;
+  color: #15803d;
+}
+
+.ov__icon--red {
+  background: #fff1f2;
+  color: #dc2626;
 }
 
 .ov__label {
-  font-size: 12px;
+  font-size: 13px;
+  color: #667085;
   font-weight: 700;
-  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.ov__label--healthTitle {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #111827;
+  font-weight: 800;
 }
 
 .ov__value {
-  font-size: 20px;
-  font-weight: 900;
-  color: #0b1220;
-  margin-top: 2px;
+  font-size: 24px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #101828;
+  word-break: break-word;
 }
 
-.ov__note {
-  margin-top: 14px;
-  color: #6b7280;
+/* health ring */
+.ov__healthCardInner {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.ov__healthRingWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ov__healthRingSvg {
+  width: 92px;
+  height: 92px;
+  display: block;
+}
+
+.ov__healthRingScore {
+  font-size: 18px;
+  font-weight: 800;
+  fill: #16a34a;
+}
+
+.ov__healthContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ov__healthLabelBig {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+.ov__healthStatus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  min-width: 56px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  letter-spacing: 0.4px;
+}
+
+.ov__healthStatus--excellent,
+.ov__healthStatus--good {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.ov__healthStatus--average {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.ov__healthStatus--poor {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.ov__healthNote {
+  margin: 0;
   font-size: 13px;
+  line-height: 1.4;
+  color: #4b5563;
+  font-weight: 600;
 }
 
-@media (max-width: 1100px) {
-  .ov__grid {
+.ov__mainGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 2.15fr) minmax(340px, 0.9fr);
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.ov__panel {
+  background: #ffffff;
+  border: 1px solid #e5ecf6;
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.ov__panel--chart,
+.ov__panel--side {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ov__panel--side {
+  padding: 12px;
+  justify-content: flex-start;
+  min-height: 0;
+}
+
+.ov__panelHeader {
+  margin-bottom: 14px;
+  flex-shrink: 0;
+}
+
+.ov__panelHeader h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.ov__chartWrap {
+  flex: 1;
+  min-height: 300px;
+  padding-top: 6px;
+}
+
+.ov__emptyState {
+  flex: 1;
+  min-height: 0;
+  border: 1px dashed #c8d7f0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 24px;
+  text-align: center;
+}
+
+.ov__emptyIcon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #e8f1ff;
+  color: #1d4ed8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+
+.ov__emptyState h4 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ov__emptyState p {
+  margin: 0;
+  max-width: 420px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #667085;
+}
+
+.ov__welcomeCard,
+.ov__summaryCard {
+  flex: 1;
+  min-height: 0;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  border: 1px solid #dce8ff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ov__welcomeCard h3,
+.ov__summaryCard h3 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #1546a0;
+}
+
+.ov__welcomeCard p {
+  margin: 0 0 18px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #5f6b7a;
+}
+
+.ov__welcomeStats {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.ov__welcomeStats div,
+.ov__summaryRow {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #e4eefc;
+}
+
+.ov__welcomeStats span,
+.ov__summaryRow span {
+  display: block;
+  font-size: 13px;
+  color: #667085;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.ov__welcomeStats strong,
+.ov__summaryRow strong {
+  font-size: 20px;
+  color: #111827;
+  font-weight: 800;
+}
+
+.ov__summaryRows {
+  display: grid;
+  gap: 12px;
+}
+
+.ov__summaryRow--net {
+  background: #eafaf1;
+  border-color: #ccebd8;
+}
+
+/* side stack */
+.ov__sideStack {
+  display: grid;
+  gap: 12px;
+  height: 100%;
+  min-height: 0;
+}
+
+/* compact goal card */
+.ov__goalCardCompact {
+  width: 100%;
+  border: 1px solid #e5ecf6;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.ov__goalCardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ov__goalCardLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7b8794;
+  margin-bottom: 4px;
+}
+
+.ov__goalCardTitle {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #0f172a;
+  text-transform: capitalize;
+}
+
+.ov__goalCardDate {
+  font-size: 12px;
+  font-weight: 700;
+  color: #7b8794;
+  white-space: nowrap;
+  margin-top: 3px;
+}
+
+.ov__goalCardAmount {
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 14px;
+}
+
+.ov__goalCardBody {
+  display: grid;
+  grid-template-columns: 1fr 150px;
+  align-items: center;
+  gap: 10px;
+}
+
+.ov__goalCardInfo {
+  display: grid;
+  gap: 10px;
+}
+
+.ov__goalMiniInfo {
+  padding: 10px 12px;
+  border: 1px solid #e7edf5;
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.ov__goalMiniInfo span {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #7b8794;
+  margin-bottom: 5px;
+}
+
+.ov__goalMiniInfo strong {
+  font-size: 16px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.ov__goalCardGaugeWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* semicircle gauge */
+.ov__semiGauge {
+  width: 145px;
+  text-align: center;
+}
+
+.ov__semiGaugeSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.ov__semiGaugeValue {
+  margin-top: -2px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+}
+
+.ov__semiGaugeScale {
+  margin-top: 2px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9aa4b2;
+  padding: 0 8px;
+}
+
+.ov__semiGaugeCaption {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #667085;
+}
+
+/* upcoming alerts */
+.ov__upcomingCard {
+  border: 1px solid #e5ecf6;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  padding: 14px;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.04);
+  min-height: 0;
+}
+
+.ov__upcomingHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.ov__upcomingTitle {
+  font-size: 16px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.ov__upcomingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.ov__upcomingList {
+  display: grid;
+  gap: 10px;
+}
+
+.ov__alertItem {
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 14px;
+  border: 1px solid #e8eef7;
+  background: #ffffff;
+}
+
+.ov__alertItemIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.ov__alertItem--emerald .ov__alertItemIcon {
+  background: #e9f9ef;
+  color: #15803d;
+}
+
+.ov__alertItem--blue .ov__alertItemIcon {
+  background: #eaf2ff;
+  color: #1d4ed8;
+}
+
+.ov__alertItem--muted .ov__alertItemIcon {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.ov__alertItemTitle {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.ov__alertItemSubtitle {
+  font-size: 11px;
+  color: #667085;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.ov__alertChip {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #111827;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 1200px) {
+  .ov {
+    height: auto;
+    overflow: auto;
+  }
+
+  .ov__grid--three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ov__mainGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .ov__panel--chart {
+    min-height: 360px;
+  }
+
+  .ov__panel--side {
+    min-height: 280px;
+  }
+
+  .ov__goalCardBody {
+    grid-template-columns: 1fr;
+  }
+
+  .ov__goalCardGaugeWrap {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .ov {
+    height: auto;
+    overflow: auto;
+    padding: 14px;
+  }
+
+  .ov__grid--three {
+    grid-template-columns: 1fr;
+  }
+
+  .ov__value {
+    font-size: 20px;
+  }
+
+  .ov__title {
+    font-size: 24px;
+  }
+
+  .ov__panelHeader h3 {
+    font-size: 18px;
+  }
+
+  .ov__goalCardHead {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .ov__goalCardTitle {
+    font-size: 20px;
+  }
+
+  .ov__goalCardAmount {
+    font-size: 24px;
+  }
+
+  .ov__semiGauge {
+    width: 140px;
+  }
+
+  .ov__healthCardInner {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .ov__healthContent {
+    align-items: center;
+  }
+
+  .ov__healthRingSvg {
+    width: 90px;
+    height: 90px;
+  }
+
+  .ov__goalCardBody {
+    grid-template-columns: 1fr;
+  }
+
+  .ov__alertItem {
+    grid-template-columns: 38px 1fr;
+  }
+
+  .ov__alertChip {
+    grid-column: 2;
+    justify-self: start;
   }
 }

@@ -1,0 +1,64 @@
+.fa-wrap {
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+}
+
+.fa-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.fa-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.fa-subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  opacity: 0.75;
+}
+
+.fa-pillbar {
+  display: inline-flex;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.10);
+  background: rgba(0,0,0,0.02);
+}
+
+.fa-pill {
+  border: 1px solid rgba(0,0,0,0.12);
+  background: #fff;
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+  color: #374151;
+}
+
+.fa-pill:hover {
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.25);
+  color: #1d4ed8;
+}
+
+.fa-pill.is-active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.fa-body {
+  margin-top: 8px;
+}

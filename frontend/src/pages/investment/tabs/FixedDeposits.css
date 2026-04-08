@@ -1,0 +1,149 @@
+/* FixedDeposits.css */
+
+.fdCard {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 18px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.fdHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.fdTitle {
+  font-size: 18px;
+  font-weight: 900;
+  color: #111827;
+}
+
+.fdMeta {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+.fdBtnPrimary {
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 800;
+  transition: all 0.2s ease;
+}
+
+.fdBtnPrimary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
+}
+
+.fdBtnPrimary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fdError {
+  margin-top: 12px;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.fdBankRow {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.fdBankLabel {
+  font-size: 13px;
+  font-weight: 800;
+  color: #111827;
+}
+
+.fdBankPills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.fdPill {
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  background: rgba(37, 99, 235, 0.06);
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  color: #1f2937;
+}
+
+.fdPill:hover {
+  background: rgba(37, 99, 235, 0.15);
+  border-color: rgba(37, 99, 235, 0.45);
+}
+
+.fdPill.active {
+  background: rgba(37, 99, 235, 0.20);
+  border-color: rgba(37, 99, 235, 0.65);
+}
+
+.fdPill .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #2563eb;
+}
+
+.fdChartWrap {
+  height: 380px;
+  margin-top: 20px;
+}
+
+.fdTableWrap {
+  margin-top: 18px;
+  overflow-x: auto;
+}
+
+.fdTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+}
+
+.fdTable th {
+  text-align: left;
+  padding: 12px 10px;
+  font-size: 12px;
+  opacity: 0.85;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.10);
+}
+
+.fdTable td {
+  padding: 12px 10px;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.fdTable tbody tr:hover {
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.fdNote {
+  margin-top: 14px;
+  font-size: 12px;
+  opacity: 0.7;
+}

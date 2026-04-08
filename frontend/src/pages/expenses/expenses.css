@@ -406,3 +406,402 @@
     display: none;
   }
 }
+/* =========================
+   OCR TABLE (missing styles)
+   ========================= */
+
+.exp-ocr-table {
+  margin-top: 12px;
+  width: 100%;
+}
+
+.ocr-row {
+  display: grid;
+  grid-template-columns: 70px 150px 220px 180px 1fr 160px 140px;
+  gap: 10px;
+  padding: 10px 10px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  align-items: center;
+}
+
+.ocr-row.head {
+  border-top: 0;
+  font-weight: 950;
+  opacity: 0.75;
+  padding-top: 0;
+}
+
+.ocr-row .right {
+  text-align: right;
+}
+
+.exp-raw {
+  margin-top: 12px;
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(0,0,0,0.02);
+}
+
+.exp-raw pre {
+  margin: 10px 0 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Responsive OCR */
+@media (max-width: 1100px) {
+  .ocr-row {
+    grid-template-columns: 60px 140px 200px 160px 1fr 140px 120px;
+  }
+}
+
+@media (max-width: 700px) {
+  .ocr-row {
+    grid-template-columns: 1fr;
+  }
+  .ocr-row.head {
+    display: none;
+  }
+}
+/* Recommendations */
+.rec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 900px) {
+  .rec-grid { grid-template-columns: 1fr; }
+}
+
+.rec-card {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 14px;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+}
+
+.rec-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.rec-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.5px;
+}
+
+.rec-badge.low { background: rgba(46, 204, 113, 0.15); }
+.rec-badge.medium { background: rgba(241, 196, 15, 0.18); }
+.rec-badge.high { background: rgba(231, 76, 60, 0.15); }
+
+.rec-cat {
+  font-size: 12px;
+  opacity: 0.75;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.rec-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.rec-msg {
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+.rec-empty {
+  border: 1px dashed rgba(0,0,0,0.18);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(0,0,0,0.02);
+}
+
+.rec-empty-title {
+  font-weight: 900;
+  margin-bottom: 6px;
+}
+
+.rec-empty-sub {
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.rec-empty-sub ul {
+  margin: 8px 0 0 18px;
+}
+/* ===============================
+   OCR PAGE STYLES
+================================ */
+
+.exp-ocr-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- HERO ---------- */
+.exp-ocr-hero {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #153e75, #0f2f59);
+  color: white;
+}
+
+.exp-ocr-hero-icon {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.exp-ocr-hero-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.exp-ocr-hero-sub {
+  margin: 4px 0 0;
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+/* ---------- UPLOAD CARD ---------- */
+.exp-ocr-upload-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.exp-ocr-upload-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.exp-ocr-upload-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exp-ocr-file-label {
+  background: #f1f5f9;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  border: 1px solid #e2e8f0;
+}
+
+.exp-ocr-file-input {
+  display: none;
+}
+
+.exp-ocr-file-hint {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.exp-ocr-upload-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------- TOOLBAR ---------- */
+.exp-ocr-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.exp-ocr-toolbar-spacer {
+  flex: 1;
+}
+
+.exp-ocr-select-all-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.exp-ocr-count {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* ---------- EMPTY ---------- */
+.exp-ocr-empty {
+  text-align: center;
+  padding: 30px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px dashed #e2e8f0;
+}
+
+/* ---------- SCROLL ---------- */
+.exp-ocr-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ---------- OCR CARD ---------- */
+.exp-ocr-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+
+.exp-ocr-card.duplicate {
+  background: #fff1f2;
+  border: 1px solid #fecaca;
+}
+
+/* ---------- CARD TOP ---------- */
+.exp-ocr-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.exp-ocr-card-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exp-ocr-card-badge {
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: white;
+  font-size: 12px;
+}
+
+.exp-ocr-card-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.exp-ocr-remove {
+  background: #fee2e2;
+  color: #991b1b;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ---------- FORM FIELDS ---------- */
+.exp-ocr-fields {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.exp-ocr-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exp-ocr-field-wide {
+  grid-column: span 3;
+}
+
+.exp-ocr-input {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 13px;
+}
+
+.exp-ocr-input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* ---------- READ ONLY ---------- */
+.exp-ocr-readonly {
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  font-size: 13px;
+}
+
+/* ---------- BUTTON VARIANTS ---------- */
+.exp-btn-ocr-primary {
+  background: #2563eb;
+  color: white;
+}
+
+.exp-btn-ocr-primary:hover {
+  background: #1e40af;
+}
+
+.exp-btn-ghost {
+  background: #f1f5f9;
+}
+
+/* ---------- QUICK OCR (OVERVIEW TAB) ---------- */
+.exp-ocr-quick {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.exp-ocr-file-native {
+  font-size: 13px;
+}
+
+.exp-ocr-file-name {
+  font-size: 12px;
+  color: var(--muted);
+}
+.exp-ocr-direction {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  margin-left: 8px;
+}
+
+.exp-ocr-direction.debit {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+}
+
+.exp-ocr-direction.credit {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+}
