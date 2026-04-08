@@ -1,0 +1,55 @@
+# ----------------------
+# Python / Django
+# ----------------------
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django
+*.log
+media/
+db.sqlite3
+
+# ----------------------
+# Environment variables
+# ----------------------
+.env
+
+# ----------------------
+# Node / React
+# ----------------------
+node_modules/
+frontend/node_modules/
+
+build/
+dist/
+frontend/build/
+frontend/dist/
+
+# ----------------------
+# VS Code
+# ----------------------
+.vscode/
+
+# ----------------------
+# OS files
+# ----------------------
+.DS_Store
+
+# ----------------------
+# Celery
+# ----------------------
+celerybeat-schedule*
+mysite/celerybeat-schedule*
+
+# ----------------------
+# Misc
+# ----------------------
+backup.sql
+data/
+dump.rdb
+*.pem
+debt_debug.txt

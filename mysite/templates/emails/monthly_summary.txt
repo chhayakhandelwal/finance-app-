@@ -1,0 +1,68 @@
+Hi {{ user.username }},
+
+📊 Your Financial Report – {{ summary.month_label }}
+
+----------------------------------------
+
+💰 Income: ₹{{ summary.income_total }}
+💸 Expenses: ₹{{ summary.expense_total }}
+
+🎯 Savings Goals - Total Saved Amount: ₹{{ summary.savings_goals_total_saved }}
+🛟 Emergency Funds - Total Saved Amount: ₹{{ summary.emergency_funds_total_saved }}
+
+🧾 Total Expense Entries: {{ summary.expense_count }}
+🎯 Goals Completed: {{ summary.goals_completed_count }}
+💡 Financial Health: {{ summary.financial_health }}
+
+----------------------------------------
+
+🔥 Insights:
+
+• Top spending: {{ summary.top_expense_category }} (₹{{ summary.top_expense_category_amount }})
+• Highest expense: ₹{{ summary.highest_single_expense }}
+• Savings rate: {{ summary.savings_rate }}%
+• Remaining goal amount: ₹{{ summary.remaining_goal_amount }}
+
+----------------------------------------
+
+🤝 Lending Summary:
+
+• Active Lendings: {{ summary.active_lendings_count }}
+
+----------------------------------------
+
+🛡 Insurance Summary:
+
+• Total Policies: {{ summary.insurance_policies_count }}
+{% if summary.insurance_items %}
+{% for item in summary.insurance_items %}
+• {{ item.name }} — Policy No: {{ item.policy_number }}
+{% endfor %}
+{% else %}
+• No insurance policies available.
+{% endif %}
+
+----------------------------------------
+
+⚡ Smart Suggestions:
+
+{% if summary.recommendations %}
+{% for r in summary.recommendations %}
+• {{ r }}
+{% endfor %}
+{% else %}
+• You maintained a stable financial pattern this month.
+{% endif %}
+
+----------------------------------------
+
+📉 Compared to last month:
+
+• Income change: {{ summary.income_change_pct }}%
+• Expense change: {{ summary.expense_change_pct }}%
+• Savings change: {{ summary.savings_change_pct }}%
+• Emergency change: {{ summary.emergency_change_pct }}%
+
+----------------------------------------
+
+– Your Finance App

@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <body style="font-family: Arial, sans-serif; background:#f6f8fb; padding:20px;">
+    <div style="max-width:650px; margin:auto; background:white; padding:24px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.05);">
+
+      <h2 style="margin-bottom:5px;">📊 {{ summary.month_label }} Summary</h2>
+      <p style="color:#555;">Hi {{ user.username }}, here’s your monthly financial snapshot 👇</p>
+
+      <h3 style="margin-top:25px;">💰 Basic Metrics</h3>
+      <ul style="line-height:1.8;">
+        <li><b>Income:</b> ₹{{ summary.income_total }}</li>
+        <li><b>Expenses:</b> ₹{{ summary.expense_total }}</li>
+        <li><b>Savings Goals - Total Saved Amount:</b> ₹{{ summary.savings_goals_total_saved }}</li>
+        <li><b>Emergency Funds - Total Saved Amount:</b> ₹{{ summary.emergency_funds_total_saved }}</li>
+        <li><b>Total Expense Entries:</b> {{ summary.expense_count }}</li>
+        <li><b>Goals Completed:</b> {{ summary.goals_completed_count }}</li>
+        <li><b>Financial Health:</b> {{ summary.financial_health }}</li>
+      </ul>
+
+      <h3 style="margin-top:25px;">🔥 Insights</h3>
+      <ul style="line-height:1.8;">
+        <li><b>Top category:</b> {{ summary.top_expense_category }} (₹{{ summary.top_expense_category_amount }})</li>
+        <li><b>Highest expense:</b> ₹{{ summary.highest_single_expense }}</li>
+        <li><b>Savings rate:</b> {{ summary.savings_rate }}%</li>
+        <li><b>Remaining goal amount:</b> ₹{{ summary.remaining_goal_amount }}</li>
+      </ul>
+
+      <h3 style="margin-top:25px;">🤝 Lending Summary</h3>
+      <ul style="line-height:1.8;">
+        <li><b>Active Lendings:</b> {{ summary.active_lendings_count }}</li>
+      </ul>
+
+      <h3 style="margin-top:25px;">🛡 Insurance Summary</h3>
+      <ul style="line-height:1.8;">
+        <li><b>Total Policies:</b> {{ summary.insurance_policies_count }}</li>
+        {% if summary.insurance_items %}
+          {% for item in summary.insurance_items %}
+            <li><b>{{ item.name }}</b> — Policy No: {{ item.policy_number }}</li>
+          {% endfor %}
+        {% else %}
+          <li>No insurance policies available.</li>
+        {% endif %}
+      </ul>
+
+      <h3 style="margin-top:25px;">📉 Month Comparison</h3>
+      <ul style="line-height:1.8;">
+        <li><b>Income change:</b> {{ summary.income_change_pct }}%</li>
+        <li><b>Expense change:</b> {{ summary.expense_change_pct }}%</li>
+        <li><b>Savings change:</b> {{ summary.savings_change_pct }}%</li>
+        <li><b>Emergency change:</b> {{ summary.emergency_change_pct }}%</li>
+      </ul>
+
+      <h3 style="margin-top:25px;">⚡ Smart Suggestions</h3>
+      <ul style="line-height:1.8;">
+        {% if summary.recommendations %}
+          {% for item in summary.recommendations %}
+            <li>{{ item }}</li>
+          {% endfor %}
+        {% else %}
+          <li>You maintained a stable financial pattern this month 👍</li>
+        {% endif %}
+      </ul>
+
+      <p style="margin-top:30px; color:#777;">– Your Finance App</p>
+    </div>
+  </body>
+</html>
